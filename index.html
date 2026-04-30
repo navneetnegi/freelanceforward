@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FreelanceForward — Master the Art of Freelancing</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C8973A;
+    --gold-light: #F5D98B;
+    --gold-dark: #8A6220;
+    --ink: #0E0D0B;
+    --cream: #FAF7F2;
+    --warm-white: #FFFEF9;
+    --muted: #6B6456;
+    --border: rgba(200,151,58,0.18);
+    --border-strong: rgba(200,151,58,0.4);
+    --surface: rgba(255,254,249,0.85);
+    --card-bg: rgba(255,254,249,0.6);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Satoshi', sans-serif;
+    background: var(--ink);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GLOW ── */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 { width: 600px; height: 600px; background: rgba(200,151,58,0.12); top: -200px; right: -100px; }
+  .glow-2 { width: 400px; height: 400px; background: rgba(200,151,58,0.07); bottom: 20%; left: -150px; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 5%;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(14,13,11,0.7);
+  }
+  .nav-logo {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.55rem 1.4rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--gold-light); transform: scale(1.03); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 90vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 7rem 5% 5rem;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border-strong);
+    background: rgba(200,151,58,0.1);
+    color: var(--gold-light);
+    font-size: 0.78rem; font-weight: 500;
+    padding: 0.4rem 1rem; border-radius: 50px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero-badge::before { content: '★'; font-size: 0.65rem; }
+
+  h1 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    max-width: 800px;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--gold);
+    position: relative;
+  }
+  h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    opacity: 0.35;
+    border-radius: 2px;
+  }
+
+  .hero-sub {
+    margin-top: 1.8rem;
+    font-size: 1.15rem;
+    color: rgba(250,247,242,0.65);
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+  .hero-actions { display: flex; gap: 1rem; margin-top: 2.5rem; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.9rem 2.2rem;
+    border-radius: 50px; border: none; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 0 0 0 rgba(200,151,58,0);
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(200,151,58,0.3);
+  }
+  .btn-ghost {
+    color: var(--cream);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .btn-ghost:hover { opacity: 1; }
+  .btn-ghost svg { width: 16px; height: 16px; }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap; justify-content: center;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--cream);
+  }
+  .stat-num span { color: var(--gold); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* ── SECTIONS SHARED ── */
+  section { position: relative; z-index: 1; }
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--cream);
+  }
+  .section-body {
+    font-size: 1.05rem;
+    color: rgba(250,247,242,0.65);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-top: 1rem;
+  }
+
+  /* ── BENEFITS ── */
+  .benefits { padding: 7rem 5%; }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    margin-top: 4rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .benefit-card {
+    background: rgba(20,18,14,0.7);
+    padding: 2.5rem 2rem;
+    border: none;
+    transition: background 0.25s;
+  }
+  .benefit-card:hover { background: rgba(200,151,58,0.06); }
+  .benefit-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(200,151,58,0.12);
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.3rem;
+    font-size: 1.2rem;
+  }
+  .benefit-card h3 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.2rem; font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+  .benefit-card p { font-size: 0.92rem; color: rgba(250,247,242,0.55); line-height: 1.65; }
+
+  /* ── VIDEO ── */
+  .video-section { padding: 5rem 5%; }
+  .video-inner { max-width: 1100px; margin: 0 auto; }
+  .video-header { margin-bottom: 2.5rem; }
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 43%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #0a0906;
+  }
+  .video-wrapper iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  /* placeholder when no video src */
+  .video-placeholder {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, #0e0d0b 0%, #1a1710 100%);
+  }
+  .play-ring {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    background: rgba(200,151,58,0.1);
+  }
+  .play-ring:hover { transform: scale(1.1); background: rgba(200,151,58,0.2); }
+  .play-ring svg { width: 28px; height: 28px; fill: var(--gold); margin-left: 4px; }
+  .video-caption {
+    font-size: 0.88rem; color: var(--muted);
+    text-align: center; margin-top: 1.2rem;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { padding: 6rem 5%; }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+    margin-top: 3.5rem;
+  }
+  .testimonial-card {
+    background: rgba(20,18,14,0.8);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    transition: border-color 0.2s;
+  }
+  .testimonial-card:hover { border-color: var(--border-strong); }
+  .stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 1rem; }
+  .testimonial-card blockquote {
+    font-size: 0.95rem;
+    color: rgba(250,247,242,0.75);
+    line-height: 1.7;
+    font-style: normal;
+    margin-bottom: 1.3rem;
+  }
+  .t-author { display: flex; align-items: center; gap: 10px; }
+  .t-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 700;
+    background: rgba(200,151,58,0.2);
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .t-name { font-size: 0.88rem; font-weight: 600; color: var(--cream); }
+  .t-role { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── LEAD MAGNET / FORM ── */
+  .lead-section { padding: 7rem 5%; }
+  .lead-inner {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  @media (max-width: 700px) { .lead-inner { grid-template-columns: 1fr; gap: 3rem; } }
+
+  .lead-offer {
+    background: rgba(200,151,58,0.06);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .lead-offer::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  }
+  .offer-tag {
+    display: inline-block;
+    background: rgba(200,151,58,0.18);
+    color: var(--gold-light);
+    font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem; border-radius: 50px;
+    margin-bottom: 1.2rem;
+  }
+  .offer-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--cream); line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .offer-items { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .offer-items li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.88rem; color: rgba(250,247,242,0.75);
+  }
+  .offer-items li::before {
+    content: '✓';
+    color: var(--gold);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .offer-value {
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .offer-value .was { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; }
+  .offer-value .free { font-family: 'Clash Display', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+
+  /* FORM */
+  .form-box {
+    background: rgba(20,18,14,0.9);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+  }
+  .form-box h3 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--cream); letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .form-box p { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block;
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: rgba(250,247,242,0.5);
+    margin-bottom: 0.4rem;
+  }
+  .form-group input {
+    width: 100%;
+    background: rgba(250,247,242,0.05);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 0.95rem;
+    color: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-group input::placeholder { color: rgba(250,247,242,0.3); }
+  .form-group input:focus {
+    border-color: var(--gold);
+    background: rgba(200,151,58,0.06);
+  }
+
+  .form-submit {
+    width: 100%;
+    margin-top: 1.2rem;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+    border: none; border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-submit:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(200,151,58,0.3);
+  }
+  .form-submit:active { transform: translateY(0); }
+  .form-note {
+    font-size: 0.75rem; color: var(--muted);
+    text-align: center; margin-top: 0.8rem;
+  }
+
+  /* Success state */
+  .success-box {
+    display: none;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .success-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(200,151,58,0.15);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.2rem;
+    font-size: 1.8rem;
+  }
+  .success-box h4 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.4rem; color: var(--cream);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .success-box p { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 700; font-size: 0.95rem;
+    padding: 0.75rem 1.8rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .download-btn:hover { background: var(--gold-light); transform: scale(1.03); }
+  .download-btn svg { width: 16px; height: 16px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 5%;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+    position: relative; z-index: 1;
+  }
+  .footer-logo {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--cream);
+  }
+  .footer-logo span { color: var(--gold); }
+  footer p { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%; height: 1px;
+    background: var(--border);
+    margin: 0 5%;
+    width: 90%;
+  }
+
+  /* animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .anim { animation: fadeUp 0.7s ease both; }
+  .anim-2 { animation-delay: 0.12s; }
+  .anim-3 { animation-delay: 0.24s; }
+  .anim-4 { animation-delay: 0.36s; }
+</style>
+</head>
+<body>
+
+<div class="glow-orb glow-1"></div>
+<div class="glow-orb glow-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Freelance<span>Forward</span></div>
+  <a href="#get-kit" class="nav-cta">Get Free Kit →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Free Masterclass for Freelancers</div>
+
+  <h1 class="anim">Land <em>High-Ticket</em> Clients<br/>Without the Hustle</h1>
+
+  <p class="hero-sub anim anim-2">
+    The exact system 1,400+ freelancers used to double their rates, eliminate feast-or-famine cycles, and build a practice that works for them.
+  </p>
+
+  <div class="hero-actions anim anim-3">
+    <a href="#get-kit" class="btn-primary">Grab the Free Toolkit →</a>
+    <a href="#video" class="btn-ghost">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg>
+      Watch the intro
+    </a>
+  </div>
+
+  <div class="hero-stats anim anim-4">
+    <div class="stat-item">
+      <div class="stat-num">1,400<span>+</span></div>
+      <div class="stat-label">Students enrolled</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">₹1L<span>+</span></div>
+      <div class="stat-label">Save up to per month</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4.9<span>★</span></div>
+      <div class="stat-label">Average rating</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">1W<span>*</span></div>
+      <div class="stat-label">Money-back guarantee*</div>
+    </div>
+  </div>
+  <p style="margin-top:1rem; font-size:0.72rem; color: var(--muted);">* 1-week money-back guarantee applicable on full course purchase. Terms apply.</p>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits">
+  <div class="section-label">What you'll learn</div>
+  <h2 class="section-title">Everything they<br/>never taught you</h2>
+  <p class="section-body">Stop piecing things together from YouTube rabbit holes. This course covers the full freelancer operating system.</p>
+
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon">🎯</div>
+      <h3>Niche positioning that attracts premium clients</h3>
+      <p>Learn to position yourself as the obvious choice — not just another freelancer in the sea. Command rates others can only dream of.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">📩</div>
+      <h3>Cold outreach scripts that actually convert</h3>
+      <p>Proven DM and email sequences with 40%+ reply rates. No cringe, no desperation — just value-first communication that opens doors.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">💰</div>
+      <h3>Pricing frameworks to stop undercharging</h3>
+      <p>The exact pricing model to raise rates confidently without losing clients. Includes project, retainer, and value-based pricing templates.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🤝</div>
+      <h3>Client onboarding that sets the right tone</h3>
+      <p>Contracts, onboarding docs, and communication templates that make you look professional from day one and prevent scope creep.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🔄</div>
+      <h3>Referral systems for predictable revenue</h3>
+      <p>Build a referral engine that keeps your pipeline full — so you spend less time selling and more time doing work you love.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">📊</div>
+      <h3>Finance basics every freelancer must know</h3>
+      <p>Taxes, invoicing, savings rate, emergency funds — handle your money like a CEO, not an employee with irregular paychecks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section" id="video">
+  <div class="video-inner">
+    <div class="video-header">
+      <div class="section-label">Free Masterclass</div>
+      <h2 class="section-title">Watch before you<br/>send another proposal</h2>
+      <p class="section-body">In this 45-minute video, I walk through the #1 mistake most freelancers make and the 3-step system to fix it — free.</p>
+    </div>
+
+    <div class="video-wrapper">
+      <!--
+        REPLACE the src below with your actual YouTube embed URL:
+        e.g. src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+        or Vimeo: src="https://player.vimeo.com/video/YOUR_VIDEO_ID"
+      -->
+      <div class="video-placeholder">
+        <div class="play-ring">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <p style="color: rgba(250,247,242,0.4); font-size: 0.85rem;">Replace this with your YouTube / Vimeo embed</p>
+      </div>
+      <!-- Uncomment and fill in your video:
+      <iframe src="https://www.youtube.com/embed/YOUR_ID?rel=0" allowfullscreen></iframe>
+      -->
+    </div>
+
+    <p class="video-caption">Free masterclass · 45 min · No signup required to watch</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-label">Student results</div>
+  <h2 class="section-title">Real outcomes,<br/>real freelancers</h2>
+
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Within 3 weeks of applying the cold outreach module, I had two retainer clients. My monthly income went from ₹35K to ₹90K."</blockquote>
+      <div class="t-author">
+        <div class="t-avatar">AR</div>
+        <div>
+          <div class="t-name">Arjun Rao</div>
+          <div class="t-role">UX Designer · Bangalore</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"I was charging $20/hr and afraid to raise rates. After the pricing module I went to $75/hr and didn't lose a single long-term client."</blockquote>
+      <div class="t-author">
+        <div class="t-avatar">SK</div>
+        <div>
+          <div class="t-name">Sara K.</div>
+          <div class="t-role">Copywriter · Remote</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The niche positioning framework alone was worth 10x the price. I finally feel like I have a real business, not just a side hustle."</blockquote>
+      <div class="t-author">
+        <div class="t-avatar">MP</div>
+        <div>
+          <div class="t-name">Marcus P.</div>
+          <div class="t-role">Web Developer · Lagos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEAD MAGNET + FORM -->
+<section class="lead-section" id="get-kit">
+  <div class="lead-inner">
+    <!-- OFFER -->
+    <div class="lead-offer">
+      <div class="offer-tag">Free Resource</div>
+      <div class="offer-title">The Freelancer Starter Toolkit</div>
+      <ul class="offer-items">
+        <li>Cold outreach email templates (7 proven scripts)</li>
+        <li>Client onboarding checklist (12-step PDF)</li>
+        <li>Rate calculator spreadsheet</li>
+        <li>Niche positioning worksheet</li>
+        <li>Contract clause library (editable)</li>
+        <li>30-day client acquisition roadmap</li>
+      </ul>
+      <div class="offer-value">
+        <span class="was">₹2,999</span>
+        <span class="free">Free</span>
+        <span style="font-size:0.8rem; color: var(--muted);">for a limited time</span>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-box">
+      <div id="formContent">
+        <h3>Get instant access</h3>
+        <p>Drop your details below and we'll send the toolkit straight to your inbox.</p>
+
+        <div class="form-group">
+          <label>Your name</label>
+          <input type="text" id="fname" placeholder="Rahul Sharma" autocomplete="name"/>
+        </div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="femail" placeholder="rahul@example.com" autocomplete="email"/>
+        </div>
+        <div class="form-group">
+          <label>Your freelance skill</label>
+          <input type="text" id="fskill" placeholder="e.g. Web Design, Copywriting…"/>
+        </div>
+
+        <button class="form-submit" onclick="handleSubmit()">
+          Send Me the Free Toolkit →
+        </button>
+        <p class="form-note">🔒 Zero spam. Unsubscribe any time.</p>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-box" id="successBox">
+        <div class="success-icon">✦</div>
+        <h4>You're in! Toolkit unlocked.</h4>
+        <p>Check your inbox — your Freelancer Starter Toolkit is on its way. While you wait, download it directly below.</p>
+        <a href="#" class="download-btn" id="dlBtn" onclick="triggerDownload(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download Toolkit PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Freelance<span>Forward</span></div>
+  <p>© 2025 FreelanceForward · All rights reserved</p>
+  <p style="font-size:0.75rem; color: var(--muted);">Made with intention · Not another cookie-cutter course</p>
+</footer>
+
+<script>
+function handleSubmit() {
+  const name = document.getElementById('fname').value.trim();
+  const email = document.getElementById('femail').value.trim();
+  const skill = document.getElementById('fskill').value.trim();
+
+  if (!name || !email) {
+    alert('Please fill in your name and email to unlock the toolkit.');
+    return;
+  }
+  if (!email.includes('@') || !email.includes('.')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  // Hide form, show success
+  document.getElementById('formContent').style.display = 'none';
+  const sb = document.getElementById('successBox');
+  sb.style.display = 'block';
+
+  // You can hook in your email service here (ConvertKit, Mailchimp, etc.)
+  console.log('Lead captured:', { name, email, skill });
+}
+
+function triggerDownload(e) {
+  e.preventDefault();
+  // Replace the URL below with your actual PDF/resource URL
+  // e.g. const url = 'https://yoursite.com/freelancer-toolkit.pdf';
+  // window.open(url, '_blank');
+  alert('Replace the download URL in the code with your actual PDF link.\n\nThis is where the gated resource gets delivered!');
+}
+</script>
+</body>
+</html>
