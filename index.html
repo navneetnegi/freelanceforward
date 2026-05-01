@@ -625,15 +625,7 @@
         e.g. src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
         or Vimeo: src="https://player.vimeo.com/video/YOUR_VIDEO_ID"
       -->
-      <div class="video-placeholder">
-        <div class="play-ring">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-        <p style="color: rgba(250,247,242,0.4); font-size: 0.85rem;">Replace this with your YouTube / Vimeo embed</p>
-      </div>
-      <!-- Uncomment and fill in your video:
-      <iframe src="https://www.youtube.com/embed/YOUR_ID?rel=0" allowfullscreen></iframe>
-      -->
+      <iframe src="https://www.youtube.com/embed/JfZComO80gg?rel=0" allowfullscreen></iframe>
     </div>
 
     <p class="video-caption">Free masterclass · 45 min · No signup required to watch</p>
@@ -751,8 +743,12 @@
 </footer>
 
 <script>
-function handleSubmit() {
-  const name = document.getElementById('fname').value.trim();
+  // ── REPLACE THIS with your Google Apps Script Web App URL ──
+  // Follow the steps below to get this URL, then paste it here.
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDP1ua1nvEldjE4VwTi2UcgVQ10v_htBqwYXpI3Jbbb92KI9u-g3EijnbacpCsL7QUOg/exec';
+
+async function handleSubmit() {
+  const name  = document.getElementById('fname').value.trim();
   const email = document.getElementById('femail').value.trim();
   const skill = document.getElementById('fskill').value.trim();
 
@@ -765,21 +761,33 @@ function handleSubmit() {
     return;
   }
 
-  // Hide form, show success
-  document.getElementById('formContent').style.display = 'none';
-  const sb = document.getElementById('successBox');
-  sb.style.display = 'block';
+  // Show loading state
+  const btn = document.querySelector('.form-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
 
-  // You can hook in your email service here (ConvertKit, Mailchimp, etc.)
-  console.log('Lead captured:', { name, email, skill });
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // required for Apps Script
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, skill })
+    });
+  } catch (err) {
+    console.error('Sheet write error:', err);
+    // no-cors means we can't read the response — treat as success
+  }
+
+  // Show success regardless (no-cors blocks response reading)
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('successBox').style.display = 'block';
 }
 
 function triggerDownload(e) {
   e.preventDefault();
-  // Replace the URL below with your actual PDF/resource URL
-  // e.g. const url = 'https://yoursite.com/freelancer-toolkit.pdf';
-  // window.open(url, '_blank');
-  alert('Replace the download URL in the code with your actual PDF link.\n\nThis is where the gated resource gets delivered!');
+  // Replace with your actual PDF/resource URL
+  // window.open('https://yoursite.com/freelancer-toolkit.pdf', '_blank');
+  alert('Replace the download URL in triggerDownload() with your actual PDF link.');
 }
 </script>
 </body>
